@@ -1,0 +1,21 @@
+{
+  "name": "Forma+ - Seu corpo. Sua mente. Sua evolução.",
+  "short_name": "Forma+",
+  "description": "Plataforma SaaS de treino e nutrição personalizada por IA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0D0F",
+  "theme_color": "#20E58A",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

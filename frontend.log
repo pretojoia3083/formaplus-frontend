@@ -1,0 +1,15 @@
+   ▲ Next.js 14.0.4
+   - Local:        http://localhost:3000
+
+Error: Debug Failure. Expected C:/projetos code ia/formaplus-frontend/tsconfig.json === C:\projetos code ia\formaplus-frontend\tsconfig.json. 
+    at attachFileToDiagnostic (C:\projetos code ia\formaplus-frontend\node_modules\typescript\lib\typescript.js:21633:9)
+    at attachFileToDiagnostics (C:\projetos code ia\formaplus-frontend\node_modules\typescript\lib\typescript.js:21662:34)
+    at Object.parseJsonText2 [as parseJsonText] (C:\projetos code ia\formaplus-frontend\node_modules\typescript\lib\typescript.js:33317:35)
+    at parseJsonText (C:\projetos code ia\formaplus-frontend\node_modules\typescript\lib\typescript.js:33074:17)
+    at parseConfigFileTextToJson (C:\projetos code ia\formaplus-frontend\node_modules\typescript\lib\typescript.js:42494:26)
+    at Object.readConfigFile (C:\projetos code ia\formaplus-frontend\node_modules\typescript\lib\typescript.js:42491:39)
+    at getTypeScriptConfiguration (C:\projetos code ia\formaplus-frontend\node_modules\next\dist\lib\typescript\getTypeScriptConfiguration.js:29:38)
+    at writeConfigurationDefaults (C:\projetos code ia\formaplus-frontend\node_modules\next\dist\lib\typescript\writeConfigurationDefaults.js:178:117)
+    at verifyTypeScriptSetup (C:\projetos code ia\formaplus-frontend\node_modules\next\dist\lib\verify-typescript-setup.js:119:74)
+    at async verifyTypeScript (C:\projetos code ia\formaplus-frontend\node_modules\next\dist\server\lib\router-utils\setup-dev-bundler.js:112:26)
+[?25h
