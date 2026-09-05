@@ -1,10 +1,10 @@
 'use client'
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useAuth } from '@/contexts/AuthContext'
-import { Button } from '@/components/ui/Button'
-import { Card } from '@/components/ui/Card'
-import { Input } from '@/components/ui/Input'
+import { useAuth } from '../../../contexts/AuthContext'
+import { Button } from '../../../components/ui/Button'
+import { Card } from '../../../components/ui/Card'
+import { Input } from '../../../components/ui/Input'
 
 export default function RegisterPage() {
   const { register } = useAuth()
@@ -31,7 +31,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3">
-            <img src="/images/logo.png" alt="Forma+" className="h-12 w-auto" />
+            <img src="/images/logo.png" alt="Forma+" className="h-24 w-auto" />
           </div>
           <p className="text-gray-400 mt-2">Crie sua conta gratuita</p>
         </div>

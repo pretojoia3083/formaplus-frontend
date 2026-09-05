@@ -27,7 +27,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3">
-            <img src="/images/logo.png" alt="Forma+" className="h-12 w-auto" />
+            <img src="/images/logo.png" alt="Forma+" className="h-24 w-auto" />
           </div>
           <p className="text-gray-400 mt-2">Seu corpo. Sua mente. Sua evolução.</p>
         </div>
