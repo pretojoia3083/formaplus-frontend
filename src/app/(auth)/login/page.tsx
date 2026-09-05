@@ -1,10 +1,10 @@
 'use client'
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { useAuth } from '../../../contexts/AuthContext'
-import { Button } from '../../../components/ui/Button'
-import { Card } from '../../../components/ui/Card'
-import { Input } from '../../../components/ui/Input'
+import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Input } from '@/components/ui/Input'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -27,12 +27,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-700 rounded-xl flex items-center justify-center text-black font-bold text-2xl">
-              F
-            </div>
-            <span className="text-3xl font-bold">
-              Forma<span className="text-green-500">+</span>
-            </span>
+            <img src="/images/logo.png" alt="Forma+" className="h-12 w-auto" />
           </div>
           <p className="text-gray-400 mt-2">Seu corpo. Sua mente. Sua evolução.</p>
         </div>
