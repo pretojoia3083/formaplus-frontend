@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 export const PWABanner: React.FC = () => {
   const [show, setShow] = useState(false)
   const [isIOS, setIsIOS] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
 
   useEffect(() => {
     const ua = navigator.userAgent
@@ -14,10 +15,31 @@ export const PWABanner: React.FC = () => {
     
     setIsIOS(ios)
     
-    if (isMobile && !isStandalone && !wasDismissed) {
+    if (isStandalone || wasDismissed) return
+
+    window.addEventListener('beforeinstallprompt', (e: any) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      if (isMobile) {
+        setTimeout(() => setShow(true), 2000)
+      }
+    })
+
+    if (isMobile) {
       setTimeout(() => setShow(true), 2000)
     }
   }, [])
+
+  const handleInstall = async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      if (outcome === 'accepted') {
+        setShow(false)
+      }
+      setDeferredPrompt(null)
+    }
+  }
 
   const handleDismiss = () => {
     setShow(false)
@@ -34,46 +56,45 @@ export const PWABanner: React.FC = () => {
             <span className="text-3xl">📱</span>
           </div>
           <div className="flex-1">
-            <h3 className="text-white font-bold text-lg">Baixe o Forma+ no celular</h3>
+            <h3 className="text-white font-bold text-lg">Instale o Forma+ no celular</h3>
             
             {isIOS ? (
-              <div className="mt-2 space-y-1">
+              <div className="mt-2">
                 <p className="text-gray-400 text-sm">
-                  1. Toque no botão <strong className="text-white">📤 Compartilhar</strong> (parte de baixo)
+                  1. Toque no botão <strong className="text-white">📤 Compartilhar</strong> (barra inferior)
                 </p>
-                <p className="text-gray-400 text-sm">
-                  2. Role para baixo e toque em <strong className="text-white">Adicionar à Tela de Início</strong>
-                </p>
-                <p className="text-gray-400 text-sm">
-                  3. Toque em <strong className="text-white">Adicionar</strong>
+                <p className="text-gray-400 text-sm mt-1">
+                  2. Role e toque em <strong className="text-white">Adicionar à Tela de Início</strong>
                 </p>
               </div>
             ) : (
-              <div className="mt-2 space-y-1">
-                <p className="text-gray-400 text-sm">
-                  1. Toque nos <strong className="text-white">⋮ Três Pontos</strong> (canto superior)
-                </p>
-                <p className="text-gray-400 text-sm">
-                  2. Toque em <strong className="text-white">Instalar app</strong> ou <strong className="text-white">Adicionar à Tela Inicial</strong>
-                </p>
-                <p className="text-gray-400 text-sm">
-                  3. Confirme tocando em <strong className="text-white">Instalar</strong>
-                </p>
+              <div className="mt-2">
+                {deferredPrompt ? (
+                  <p className="text-gray-400 text-sm">
+                    Toque no botão abaixo para instalar!
+                  </p>
+                ) : (
+                  <p className="text-gray-400 text-sm">
+                    Toque nos <strong className="text-white">⋮</strong> → <strong className="text-white">Instalar app</strong>
+                  </p>
+                )}
               </div>
             )}
 
             <div className="flex items-center gap-3 mt-4">
-              <button
-                onClick={handleDismiss}
-                className="px-5 py-2.5 bg-green-500 text-black font-bold rounded-xl text-sm hover:bg-green-400 transition-colors"
-              >
-                ✅ Entendi!
-              </button>
+              {!isIOS && deferredPrompt && (
+                <button
+                  onClick={handleInstall}
+                  className="px-5 py-2.5 bg-green-500 text-black font-bold rounded-xl text-sm hover:bg-green-400 transition-colors"
+                >
+                  📲 Instalar Agora
+                </button>
+              )}
               <button
                 onClick={handleDismiss}
                 className="px-4 py-2 text-gray-500 text-sm hover:text-gray-300 transition-colors"
               >
-                Fechar
+                {isIOS ? 'Entendi!' : 'Fechar'}
               </button>
             </div>
           </div>

@@ -1,14 +1,26 @@
-const CACHE_NAME = 'formaplus-v1'
-const urlsToCache = ['/', '/login', '/register', '/images/logo.png']
+const CACHE_NAME = 'formaplus-v2'
+const urlsToCache = ['/']
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting()
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(urlsToCache).catch(() => {})
+    })
   )
 })
 
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim())
+})
+
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return
   event.respondWith(
-    caches.match(event.request).then((response) => response || fetch(event.request))
+    fetch(event.request).then((response) => {
+      return response
+    }).catch(() => {
+      return caches.match(event.request)
+    })
   )
 })
