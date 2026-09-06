@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../../contexts/AuthContext'
-import { workoutsAPI, nutritionAPI, progressAPI } from '../../../lib/api'
+import { workoutsAPI, nutritionAPI, progressAPI, trainerAPI } from '../../../lib/api'
 import Link from 'next/link'
 
 export default function DashboardPage() {
@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [waterToday, setWaterToday] = useState<any>(null)
   const [generatingWorkout, setGeneratingWorkout] = useState(false)
   const [generatingNutrition, setGeneratingNutrition] = useState(false)
+  const [myTrainer, setMyTrainer] = useState<any>(null)
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -25,6 +26,7 @@ export default function DashboardPage() {
       workoutsAPI.getToday().then(r => setTodayWorkout(r.data)).catch(() => {})
       nutritionAPI.getToday().then(r => setTodayMeals(r.data || [])).catch(() => {})
       progressAPI.getWaterToday().then(r => setWaterToday(r.data)).catch(() => {})
+      trainerAPI.getMyTrainer().then(r => setMyTrainer(r.data)).catch(() => {})
     }
   }, [isAuthenticated])
 
@@ -105,6 +107,45 @@ export default function DashboardPage() {
           <p className="text-green-500 text-sm mt-2">Ativo</p>
         </div>
       </div>
+
+      {myTrainer && (
+        <div className="bg-gradient-to-r from-green-500/10 to-green-500/5 border border-green-500/20 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center text-green-500 text-xl font-bold">
+                {myTrainer.trainer_name?.[0]?.toUpperCase() || 'P'}
+              </div>
+              <div>
+                <p className="text-white font-semibold">Seu Personal: {myTrainer.trainer_name}</p>
+                <p className="text-gray-400 text-sm">{myTrainer.specialties || 'Personal Trainer'}</p>
+              </div>
+            </div>
+            <Link
+              href={`/chat?user=${myTrainer.user_id || ''}`}
+              className="px-4 py-2 bg-green-500 text-black font-bold rounded-xl text-sm hover:bg-green-400 transition-colors"
+            >
+              💬 Conversar
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {!myTrainer && (
+        <div className="bg-[#171B1E] border border-gray-800 rounded-xl p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-white font-semibold">Quer um personal trainer?</p>
+              <p className="text-gray-400 text-sm">Cadastre-se como professor ou aguarde seu personal te vincular</p>
+            </div>
+            <Link
+              href="/trainer"
+              className="px-4 py-2 bg-green-500/10 text-green-500 border border-green-500/30 rounded-xl text-sm hover:bg-green-500/20 transition-colors"
+            >
+              Ser Professor
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-[#171B1E] border border-gray-800 rounded-xl p-6">

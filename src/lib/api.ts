@@ -177,3 +177,29 @@ export const subscriptionsAPI = {
   getPayments: (params?: { limit?: number; offset?: number }) =>
     api.get('/payments', { params }),
 }
+
+export const trainerAPI = {
+  register: (data: { full_name: string; cref?: string; bio?: string; specialties?: string; experience_years?: number }) =>
+    api.post('/trainer/register', data),
+  
+  getMe: () => api.get('/trainer/me'),
+  
+  getClients: () => api.get('/trainer/clients'),
+  
+  assignClient: (email: string) => api.post('/trainer/assign-client', { user_email: email }),
+  
+  removeClient: (clientId: number) => api.delete(`/trainer/remove-client/${clientId}`),
+  
+  getMyTrainer: () => api.get('/trainer/my-trainer'),
+}
+
+export const chatAPI = {
+  send: (receiverId: number, message: string) =>
+    api.post('/chat/send', { receiver_id: receiverId, message }),
+  
+  getConversations: () => api.get('/chat/conversations'),
+  
+  getMessages: (userId: number) => api.get(`/chat/messages/${userId}`),
+  
+  getUnreadCount: () => api.get('/chat/unread-count'),
+}

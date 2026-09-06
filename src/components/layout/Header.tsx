@@ -1,27 +1,29 @@
 'use client'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../ui/Button'
+import { chatAPI } from '../../lib/api'
 import { 
   HomeIcon, 
   DumbbellIcon, 
   AppleIcon, 
   MessageCircleIcon, 
+  ChatBubbleIcon,
   ChartLineIcon,
   UserIcon,
   LogOutIcon,
   MenuIcon,
   XIcon,
 } from 'lucide-react'
-import { useState } from 'react'
 
 const navItems = [
   { href: '/dashboard', icon: HomeIcon, label: 'Dashboard' },
   { href: '/workouts', icon: DumbbellIcon, label: 'Treinos' },
   { href: '/nutrition', icon: AppleIcon, label: 'Alimentação' },
   { href: '/coach', icon: MessageCircleIcon, label: 'Coach' },
+  { href: '/chat', icon: ChatBubbleIcon, label: 'Chat' },
   { href: '/progress', icon: ChartLineIcon, label: 'Evolução' },
 ]
 
@@ -29,8 +31,17 @@ export const Header: React.FC = () => {
   const { user, logout } = useAuth()
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
 
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/')
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      chatAPI.getUnreadCount().then(r => setUnreadCount(r.data.count)).catch(() => {})
+    }, 10000)
+    chatAPI.getUnreadCount().then(r => setUnreadCount(r.data.count)).catch(() => {})
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <header className="border-b border-gray-800 bg-black/80 backdrop-blur-md sticky top-0 z-50">
@@ -47,7 +58,7 @@ export const Header: React.FC = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
+                  className={`relative flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
                     isActive(item.href)
                       ? 'bg-green-500/10 text-green-500'
                       : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -55,6 +66,11 @@ export const Header: React.FC = () => {
                 >
                   <Icon className="w-4 h-4" />
                   <span className="text-sm font-medium">{item.label}</span>
+                  {item.href === '/chat' && unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-black text-xs font-bold rounded-full flex items-center justify-center">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
                 </Link>
               )
             })}
@@ -103,7 +119,7 @@ export const Header: React.FC = () => {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+                    className={`relative flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                       isActive(item.href)
                         ? 'bg-green-500/10 text-green-500'
                         : 'text-gray-400 hover:text-white hover:bg-white/5'
@@ -111,6 +127,11 @@ export const Header: React.FC = () => {
                   >
                     <Icon className="w-5 h-5" />
                     <span>{item.label}</span>
+                    {item.href === '/chat' && unreadCount > 0 && (
+                      <span className="ml-auto w-5 h-5 bg-green-500 text-black text-xs font-bold rounded-full flex items-center justify-center">
+                        {unreadCount > 9 ? '9+' : unreadCount}
+                      </span>
+                    )}
                   </Link>
                 )
               })}
