@@ -10,6 +10,7 @@ export default function WorkoutsPage() {
   const [activePlan, setActivePlan] = useState<any>(null)
   const [todayWorkout, setTodayWorkout] = useState<any>(null)
   const [generating, setGenerating] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!loading && !isAuthenticated) router.push('/login')
@@ -24,10 +25,16 @@ export default function WorkoutsPage() {
 
   const handleGenerate = async () => {
     setGenerating(true)
+    setError('')
     try {
       const res = await workoutsAPI.generate()
       setActivePlan(res.data)
-    } catch {}
+      const today = await workoutsAPI.getToday()
+      setTodayWorkout(today.data)
+    } catch (err: any) {
+      const msg = err.response?.data?.detail || 'Erro ao gerar treino'
+      setError(msg)
+    }
     setGenerating(false)
   }
 
@@ -47,6 +54,7 @@ export default function WorkoutsPage() {
           >
             {generating ? 'Gerando plano...' : 'Gerar Plano com IA'}
           </button>
+          {error && <p className="text-red-400 mt-3 text-sm">{error}</p>}
         </div>
       ) : (
         <div className="space-y-6">

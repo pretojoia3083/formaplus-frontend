@@ -10,6 +10,7 @@ export default function NutritionPage() {
   const [activePlan, setActivePlan] = useState<any>(null)
   const [todayMeals, setTodayMeals] = useState<any[]>([])
   const [generating, setGenerating] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!loading && !isAuthenticated) router.push('/login')
@@ -24,10 +25,16 @@ export default function NutritionPage() {
 
   const handleGenerate = async () => {
     setGenerating(true)
+    setError('')
     try {
       const res = await nutritionAPI.generate()
       setActivePlan(res.data)
-    } catch {}
+      const today = await nutritionAPI.getToday()
+      setTodayMeals(today.data || [])
+    } catch (err: any) {
+      const msg = err.response?.data?.detail || 'Erro ao gerar plano alimentar'
+      setError(msg)
+    }
     setGenerating(false)
   }
 
@@ -47,6 +54,7 @@ export default function NutritionPage() {
           >
             {generating ? 'Gerando plano...' : 'Gerar Plano com IA'}
           </button>
+          {error && <p className="text-red-400 mt-3 text-sm">{error}</p>}
         </div>
       ) : (
         <div className="space-y-6">
