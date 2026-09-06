@@ -37,12 +37,7 @@ export const Header: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-green-700 rounded-lg flex items-center justify-center text-black font-bold text-xl">
-              F
-            </div>
-            <span className="text-xl font-bold">
-              Forma<span className="text-green-500">+</span>
-            </span>
+            <img src="/images/logo.png" alt="Forma+" className="h-10 w-auto" />
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
