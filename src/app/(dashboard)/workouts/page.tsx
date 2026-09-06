@@ -8,7 +8,6 @@ export default function WorkoutsPage() {
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const [activePlan, setActivePlan] = useState<any>(null)
-  const [todayWorkout, setTodayWorkout] = useState<any>(null)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
 
@@ -18,10 +17,16 @@ export default function WorkoutsPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      workoutsAPI.getActive().then(r => setActivePlan(r.data)).catch(() => {})
-      workoutsAPI.getToday().then(r => setTodayWorkout(r.data)).catch(() => {})
+      loadPlan()
     }
   }, [isAuthenticated])
+
+  const loadPlan = async () => {
+    try {
+      const r = await workoutsAPI.getActive()
+      setActivePlan(r.data)
+    } catch {}
+  }
 
   const handleGenerate = async () => {
     setGenerating(true)
@@ -29,8 +34,6 @@ export default function WorkoutsPage() {
     try {
       const res = await workoutsAPI.generate()
       setActivePlan(res.data)
-      const today = await workoutsAPI.getToday()
-      setTodayWorkout(today.data)
     } catch (err: any) {
       const msg = err.response?.data?.detail || 'Erro ao gerar treino'
       setError(msg)
@@ -42,45 +45,89 @@ export default function WorkoutsPage() {
 
   return (
     <div className="space-y-8">
-      <h1 className="text-2xl font-bold text-white">Treinos</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-white">Treinos</h1>
+        {activePlan && (
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="px-4 py-2 bg-green-500 text-black font-semibold rounded-lg hover:bg-green-400 transition-colors disabled:opacity-50 text-sm"
+          >
+            {generating ? 'Gerando...' : '🔄 Gerar Novo Plano'}
+          </button>
+        )}
+      </div>
 
       {!activePlan ? (
         <div className="bg-[#171B1E] border border-gray-800 rounded-xl p-8 text-center">
+          <div className="text-5xl mb-4">🏋️</div>
           <p className="text-gray-400 mb-4">Você ainda não tem um plano de treino</p>
           <button
             onClick={handleGenerate}
             disabled={generating}
             className="px-6 py-3 bg-green-500 text-black font-semibold rounded-lg hover:bg-green-400 transition-colors disabled:opacity-50"
           >
-            {generating ? 'Gerando plano...' : 'Gerar Plano com IA'}
+            {generating ? 'Gerando plano com IA...' : '🚀 Gerar Plano com IA'}
           </button>
           {error && <p className="text-red-400 mt-3 text-sm">{error}</p>}
         </div>
       ) : (
-        <div className="space-y-6">
-          <div className="bg-[#171B1E] border border-gray-800 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-white mb-2">Plano Ativo</h2>
-            <p className="text-gray-400">Versão {activePlan.version || 1} — Status: <span className="text-green-500">{activePlan.status || 'active'}</span></p>
+        <div className="space-y-4">
+          <div className="bg-[#171B1E] border border-gray-800 rounded-xl p-4">
+            <p className="text-gray-400 text-sm">
+              Plano versão {activePlan.version || 1} — 
+              <span className="text-green-500 ml-1">{activePlan.sessions?.length || 0} treinos na semana</span>
+            </p>
           </div>
 
-          {todayWorkout && (
-            <div className="bg-[#171B1E] border border-green-500/30 rounded-xl p-6">
-              <h2 className="text-lg font-semibold text-green-500 mb-4">Treino de Hoje — {todayWorkout.focus || 'Treino Geral'}</h2>
-              <div className="space-y-3">
-                {(todayWorkout.session_exercises || []).map((se: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between py-3 border-b border-gray-800 last:border-0">
-                    <div>
-                      <p className="text-white font-medium">{se.exercise?.name || `Exercício ${i + 1}`}</p>
-                      <p className="text-gray-400 text-sm">{se.sets}x{se.reps} — Descanso: {se.rest_seconds}s</p>
-                    </div>
-                    <button className="px-3 py-1 bg-green-500/10 text-green-500 text-sm rounded-lg hover:bg-green-500/20 transition-colors">
-                      Log
-                    </button>
-                  </div>
-                ))}
-              </div>
+          {(!activePlan.sessions || activePlan.sessions.length === 0) && (
+            <div className="bg-[#171B1E] border border-yellow-500/30 rounded-xl p-6 text-center">
+              <p className="text-yellow-400 mb-3">Plano criado mas sem treinos ainda</p>
+              <button
+                onClick={handleGenerate}
+                disabled={generating}
+                className="px-5 py-2 bg-green-500 text-black font-semibold rounded-lg hover:bg-green-400 transition-colors disabled:opacity-50"
+              >
+                {generating ? 'Gerando...' : 'Tentar Novamente'}
+              </button>
             </div>
           )}
+
+          {(activePlan.sessions || []).map((session: any, i: number) => (
+            <div key={session.id || i} className="bg-[#171B1E] border border-gray-800 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold text-white">
+                  📅 {session.day_of_week || `Dia ${i + 1}`} — {session.focus || 'Treino'}
+                </h2>
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  session.status === 'completed' ? 'bg-green-500/20 text-green-500' :
+                  session.status === 'in_progress' ? 'bg-yellow-500/20 text-yellow-500' :
+                  'bg-gray-700 text-gray-400'
+                }`}>
+                  {session.status === 'completed' ? '✅ Feito' : session.status === 'in_progress' ? '⏳ Andamento' : '📋 Pendente'}
+                </span>
+              </div>
+              
+              {session.session_exercises && session.session_exercises.length > 0 ? (
+                <div className="space-y-2">
+                  {session.session_exercises.map((se: any, j: number) => (
+                    <div key={se.id || j} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
+                      <div className="flex items-center gap-3">
+                        <span className="text-green-500 text-sm font-mono">#{se.order_index !== undefined ? se.order_index + 1 : j + 1}</span>
+                        <span className="text-white">{se.exercise?.name || `Exercício ${j + 1}`}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-gray-300 text-sm">{se.sets}x{se.reps}</span>
+                        <span className="text-gray-500 text-xs ml-2">desc: {se.rest_seconds}s</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-sm">Sem exercícios neste treino</p>
+              )}
+            </div>
+          ))}
         </div>
       )}
     </div>
