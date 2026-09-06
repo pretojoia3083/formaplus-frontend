@@ -38,6 +38,12 @@ export const authAPI = {
   login: (data: { email: string; password: string }) =>
     api.post('/auth/login/json', data),
   
+  getMe: () =>
+    api.get('/auth/me'),
+  
+  saveOnboarding: (data: any) =>
+    api.post('/auth/onboarding', data),
+  
   refresh: () =>
     api.post('/auth/refresh'),
 }

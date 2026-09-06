@@ -12,7 +12,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-green-500/5" />
         <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-32">
           <div className="text-center">
-            <img src="/images/logo.png" alt="Forma+" className="h-32 w-auto mx-auto mb-8" />
+            <img src="/images/logo.png" alt="Forma+" className="h-48 w-auto mx-auto mb-8" />
             <h1 className="text-4xl sm:text-6xl font-bold mb-6">
               Seu corpo. Sua mente.{' '}
               <span className="text-[#20E58A]">Sua evolução.</span>

@@ -25,6 +25,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedUser = getUser()
     if (savedUser && isAuthenticated()) {
       setUserState(savedUser)
+      authAPI.getMe().then(r => {
+        setUser(r.data)
+        setUserState(r.data)
+      }).catch(() => {})
     }
     setLoading(false)
   }, [])
@@ -38,6 +42,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const userInfo = userData || { email, id: 1 }
       setUser(userInfo)
       setUserState(userInfo)
+
+      try {
+        const me = await authAPI.getMe()
+        setUser(me.data)
+        setUserState(me.data)
+        if (!me.data.onboarding_complete) {
+          router.push('/onboarding')
+          toast.success('Vamos configurar seu perfil!')
+          return
+        }
+      } catch {}
       
       toast.success('Login realizado com sucesso!')
       router.push('/dashboard')
