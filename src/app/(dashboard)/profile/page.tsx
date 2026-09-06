@@ -88,6 +88,15 @@ export default function ProfilePage() {
         Sair da Conta
       </button>
 
+      {user?.email === 'luisrenatotrader@gmail.com' && (
+        <a
+          href="/admin"
+          className="block w-full py-3 bg-green-500/10 text-green-500 border border-green-500/30 rounded-xl hover:bg-green-500/20 transition-colors font-semibold text-center"
+        >
+          ⚙️ Painel Admin
+        </a>
+      )}
+
       <button
         onClick={handleDeleteAccount}
         disabled={deleting}
