@@ -68,7 +68,7 @@ export const Header: React.FC = () => {
               <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center">
                 <UserIcon className="w-4 h-4 text-green-500" />
               </div>
-              <span className="hidden sm:inline text-sm">{user?.email || 'Usuário'}</span>
+              <span className="hidden sm:inline text-sm">{user?.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : user?.email || 'Usuário'}</span>
             </Link>
 
             <Button

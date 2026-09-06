@@ -9,7 +9,7 @@ interface AuthContextType {
   user: any | null
   loading: boolean
   login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string) => Promise<void>
+  register: (email: string, password: string, firstName?: string, lastName?: string) => Promise<void>
   logout: () => void
   isAuthenticated: boolean
 }
@@ -32,12 +32,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     try {
       const response = await authAPI.login({ email, password })
-      const { access_token } = response.data
+      const { access_token, user: userData } = response.data
       
       setToken(access_token)
-      const userData = { email, id: 1 }
-      setUser(userData)
-      setUserState(userData)
+      const userInfo = userData || { email, id: 1 }
+      setUser(userInfo)
+      setUserState(userInfo)
       
       toast.success('Login realizado com sucesso!')
       router.push('/dashboard')
@@ -48,9 +48,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  const register = async (email: string, password: string) => {
+  const register = async (email: string, password: string, firstName?: string, lastName?: string) => {
     try {
-      await authAPI.register({ email, password })
+      await authAPI.register({ email, password, first_name: firstName, last_name: lastName })
       toast.success('Cadastro realizado com sucesso! Faça login.')
       router.push('/login')
     } catch (error: any) {

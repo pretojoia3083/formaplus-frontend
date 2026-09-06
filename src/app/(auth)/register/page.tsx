@@ -8,6 +8,8 @@ import { Input } from '../../../components/ui/Input'
 
 export default function RegisterPage() {
   const { register } = useAuth()
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -20,7 +22,7 @@ export default function RegisterPage() {
     }
     setLoading(true)
     try {
-      await register(email, password)
+      await register(email, password, firstName, lastName)
     } finally {
       setLoading(false)
     }
@@ -38,6 +40,33 @@ export default function RegisterPage() {
 
         <Card variant="gradient">
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Nome
+                </label>
+                <Input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Seu nome"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Sobrenome
+                </label>
+                <Input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Sobrenome"
+                  required
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">
                 Email
