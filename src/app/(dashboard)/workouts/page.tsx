@@ -122,28 +122,28 @@ export default function WorkoutsPage() {
               {session.session_exercises && session.session_exercises.length > 0 ? (
                 <div className="space-y-2">
                   {session.session_exercises.map((se: any, j: number) => (
-                    <div key={se.id || j} className="py-3 border-b border-gray-800 last:border-0">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-green-500 text-sm font-mono">#{j + 1}</span>
-                          <div>
-                            <span className="text-white font-medium">{se.exercise?.name || `Exercício ${j + 1}`}</span>
-                            <p className="text-gray-500 text-xs mt-0.5">{se.exercise?.instructions || ''}</p>
+                    <div key={se.id || j} className="py-4 border-b border-gray-800 last:border-0">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-green-500 text-sm font-mono bg-green-500/10 px-2 py-0.5 rounded">#{j + 1}</span>
+                            <span className="text-white font-semibold">{se.exercise?.name || `Exercício ${j + 1}`}</span>
                           </div>
-                        </div>
-                        <div className="text-right flex-shrink-0 ml-3">
-                          <span className="text-gray-300 text-sm">{se.sets}x{se.reps}</span>
-                          <span className="text-gray-500 text-xs ml-2">desc: {se.rest_seconds}s</span>
+                          <p className="text-gray-400 text-sm ml-10">{se.exercise?.instructions || ''}</p>
+                          <div className="flex items-center gap-4 mt-2 ml-10">
+                            <span className="text-gray-300 text-sm">🔄 {se.sets} séries x {se.reps} reps</span>
+                            <span className="text-gray-500 text-sm">⏱️ descanso {se.rest_seconds}s</span>
+                          </div>
+                          <a
+                            href={`https://www.youtube.com/results?search_query=${encodeURIComponent(se.exercise?.name || 'exercicio') + '+como+fazer+tutorial'}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 mt-2 ml-10 px-3 py-1 bg-red-500/10 text-red-400 text-xs rounded-lg hover:bg-red-500/20 transition-colors"
+                          >
+                            ▶ Ver vídeo no YouTube
+                          </a>
                         </div>
                       </div>
-                      <a
-                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(se.exercise?.name || 'exercicio') + '+como+fazer'}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 mt-2 text-xs text-green-500 hover:text-green-400 transition-colors"
-                      >
-                        ▶ Ver como fazer
-                      </a>
                     </div>
                   ))}
                 </div>
