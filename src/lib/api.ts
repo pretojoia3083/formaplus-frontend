@@ -44,6 +44,9 @@ export const authAPI = {
   saveOnboarding: (data: any) =>
     api.post('/auth/onboarding', data),
   
+  deleteAccount: () =>
+    api.delete('/auth/delete-account'),
+  
   refresh: () =>
     api.post('/auth/refresh'),
 }
@@ -57,6 +60,8 @@ export const workoutsAPI = {
   
   getHistory: (params?: { limit?: number; offset?: number }) =>
     api.get('/workouts/history', { params }),
+  
+  delete: () => api.delete('/workouts/delete'),
   
   start: (sessionId: number) =>
     api.post(`/workouts/sessions/${sessionId}/start`),
@@ -101,6 +106,8 @@ export const nutritionAPI = {
   
   getHistory: (params?: { limit?: number; offset?: number }) =>
     api.get('/nutrition/history', { params }),
+  
+  delete: () => api.delete('/nutrition/delete'),
 }
 
 export const progressAPI = {
