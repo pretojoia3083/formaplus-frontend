@@ -122,20 +122,28 @@ export default function WorkoutsPage() {
               {session.session_exercises && session.session_exercises.length > 0 ? (
                 <div className="space-y-2">
                   {session.session_exercises.map((se: any, j: number) => (
-                    <div key={se.id || j} className="flex items-center justify-between py-2 border-b border-gray-800 last:border-0">
-                      <div className="flex items-center gap-3">
-                        <span className="text-green-500 text-sm font-mono">#{j + 1}</span>
-                        <div>
-                          <span className="text-white font-medium">{se.exercise?.name || `Exercício ${j + 1}`}</span>
-                          {se.exercise?.instructions && (
-                            <p className="text-gray-500 text-xs mt-0.5 max-w-md truncate">{se.exercise.instructions}</p>
-                          )}
+                    <div key={se.id || j} className="py-3 border-b border-gray-800 last:border-0">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-green-500 text-sm font-mono">#{j + 1}</span>
+                          <div>
+                            <span className="text-white font-medium">{se.exercise?.name || `Exercício ${j + 1}`}</span>
+                            <p className="text-gray-500 text-xs mt-0.5">{se.exercise?.instructions || ''}</p>
+                          </div>
+                        </div>
+                        <div className="text-right flex-shrink-0 ml-3">
+                          <span className="text-gray-300 text-sm">{se.sets}x{se.reps}</span>
+                          <span className="text-gray-500 text-xs ml-2">desc: {se.rest_seconds}s</span>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <span className="text-gray-300 text-sm">{se.sets}x{se.reps}</span>
-                        <span className="text-gray-500 text-xs ml-2">desc: {se.rest_seconds}s</span>
-                      </div>
+                      <a
+                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(se.exercise?.name || 'exercicio') + '+como+fazer'}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 mt-2 text-xs text-green-500 hover:text-green-400 transition-colors"
+                      >
+                        ▶ Ver como fazer
+                      </a>
                     </div>
                   ))}
                 </div>
